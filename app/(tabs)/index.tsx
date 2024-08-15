@@ -1,70 +1,144 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React, { useEffect, useState } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Dimensions,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
+import { Video } from "expo-av";
+import * as Font from "expo-font";
+const { width } = Dimensions.get("window");
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const HomeScreen = () => {
+  const [fontLoaded, setFontLoaded] = useState(false);
 
-export default function HomeScreen() {
+  useEffect(() => {
+    async function loadFonts() {
+      await Font.loadAsync({
+        Oswald: require("../../assets/fonts/Oswald-SemiBold.ttf"), // Ensure path is correct
+      });
+      setFontLoaded(true);
+    }
+
+    loadFonts();
+  }, []);
+
+  if (!fontLoaded) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <View style={styles.maincontainer}>
+      <View style={styles.textContainer}>
+        <Text style={styles.maintitle}>Welcome to Roadmaps</Text>
+        <Text style={styles.maintitle2}>Design {'>'} Plan {'>'} Estimate</Text>
+      </View>
+
+      <Video
+        source={require("../../assets/sky.mp4")}
+        style={styles.video}
+        useNativeControls={false}
+        shouldPlay={true}
+        isMuted={true}
+        isLooping
+      />
+
+      <View style={styles.boxContainer}>
+        <View style={styles.firstbox}></View>
+        <View style={styles.box}></View>
+        <View style={styles.box}></View>
+      </View>
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity>
+          <Text className="">Next</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  maincontainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "yellow",
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  textContainer: {
+    position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 30,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  maintitle: {
+    fontSize: 60,
+    backgroundColor: "#FBC02D",
+    width: width,
+    textAlign: "center",
+    color: "black",
+    fontFamily: "Oswald",
+    transform: [{ skewY: "4deg" }],
+    marginBottom: 10,
+    zIndex: 20,
+  },
+  maintitle2: {
+    fontSize: 60,
+    backgroundColor: "black",
+    width: width,
+    textAlign: "center",
+    color: "#FBC02D",
+    fontFamily: "Oswald",
+    transform: [{ skewY: "-4deg" }],
+  },
+  video: {
+    width: "100%",
+    height: "100%",
+  },
+  bottomContainer: {
+    position: "absolute",
+    backgroundColor: "#FBC02D",
+    display: "flex",
+    flexDirection: "column",
+    color: "yellow",
+  },
+
+  buttonContainer: {
+    position: "absolute",
+    bottom: 30,
+    backgroundColor: "#FBC02D",
+    paddingHorizontal: 40,
+    paddingVertical: 20,
+    borderRadius: 30,
+    fontWeight: "bold",
+  },
+
+  bottomContainertext: {},
+
+  boxContainer: {
+    position: "absolute",
+    bottom: 110, 
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: width - 450, 
+    paddingHorizontal: 30,
+    zIndex: 20,
+  },
+  box: {
+    width: 10, 
+    height: 10,
+    borderRadius: 10,
+    backgroundColor: "#FBC02D",
+  },
+
+  firstbox: {
+    width: 10,
+    height: 10,
+    borderRadius: 10,
+    backgroundColor: "black",
   },
 });
+
+export default HomeScreen;
